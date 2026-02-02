@@ -46,3 +46,16 @@ if (game -> tileds [step] == selected) {
     game -> alive [player_id] = 0;
     printf("Player %d eliminated at step %d\n", player_id + 1, step);
 } //check tile and update position or alive status
+
+//Turn Advancement
+int next = (player_id + 1) % PLAYERS;
+while (!game -> alive [next]) {
+    next = (next + 1) % PLAYERS;
+}
+game -> turn = next;
+    }
+    exit(0);
+}
+
+
+
