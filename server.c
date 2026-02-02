@@ -18,9 +18,9 @@ Game *game; //pointer to shared game structure
 
 // Player Process Function
 void player_process(int player_id) {
-    while (game -> alive [id]) {
+    while (game -> alive [player_id]) {
         // Wait for turn
-        if (game -> turn != id) {
+        if (game -> turn != player_id) {
             usleep(100000); //sleep for 100ms
             continue;
         }
