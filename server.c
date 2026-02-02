@@ -15,3 +15,15 @@ typedef struct {
     int turn; //current turn
 } Game; 
 Game *game; //pointer to shared game structure
+
+// Player Process Function
+void player_process(int player_id) {
+    while (game -> alive [id]) {
+        // Wait for turn
+        if (game -> turn != id) {
+            usleep(100000); //sleep for 100ms
+            continue;
+        }
+    }
+
+// Core Game Logic 
