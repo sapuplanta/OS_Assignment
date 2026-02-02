@@ -27,3 +27,22 @@ void player_process(int player_id) {
     }
 
 // Core Game Logic 
+int step = game -> player_positions [player_id];
+if (step >= PATH_LEN) {
+    printf("Player %d wins!\n", player_id + 1);
+    exit(0);
+}   //check win condition
+
+char choice;
+printf("Player %d at step %d (L/R): ", player_id + 1, step);
+scanf(" %c", &choice); 
+
+int selected = (choice == 'L' || choice == 'l') ? 0 : 1; //0 for left, 1 for right
+
+if (game -> tileds [step] == selected) {
+    game -> player_positions [player_id]++;
+    printf("Player %d moves to step %d\n", player_id + 1, game -> player_positions [player_id]);
+} else {
+    game -> alive [player_id] = 0;
+    printf("Player %d eliminated at step %d\n", player_id + 1, step);
+} //check tile and update position or alive status
