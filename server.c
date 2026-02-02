@@ -57,5 +57,19 @@ game -> turn = next;
     exit(0);
 }
 
+int main() {
 
+    //Game Initialization
+    for (int i = 0; i < PATH_LEN; i++) {
+        game -> tileds [i] = rand() % 2; //randomly assign tiles
+    }
+    for (int i = 0; i < PLAYERS; i++) {
+        game -> player_positions [i] = 0; //initialize player positions
+        game -> alive [i] = 1; //set all players as alive
+    }
+    game -> turn = 0; //set first turn
+
+    printf("Glass Bridge Game Start!\n");
+    
+}
 
