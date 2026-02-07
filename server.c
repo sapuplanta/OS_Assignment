@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h> //posix standard functions
 #include <sys/mman.h> //memory management declarations
+#include <sys/wait.h> //wait functions
 #include <time.h> //time functions
+#include "logger.h" //logger header
 
 #define PLAYERS 3   //number of players
 #define PATH_LEN 6  //length of the path
@@ -42,9 +44,11 @@ int selected = (choice == 'L' || choice == 'l') ? 0 : 1; //0 for left, 1 for rig
 if (game -> tileds [step] == selected) {
     game -> player_positions [player_id]++;
     printf("Player %d moves to step %d\n", player_id + 1, game -> player_positions [player_id]);
+    log_event("Player %d moved to step %d", player_id + 1, game -> player_positions [player_id]);
 } else {
     game -> alive [player_id] = 0;
     printf("Player %d eliminated at step %d\n", player_id + 1, step);
+    log_event("Player %d eliminated at step %d", player_id + 1, step);
 } //check tile and update position or alive status
 
 //Turn Advancement
@@ -59,6 +63,18 @@ game -> turn = next;
 
 int main() {
 
+    //Shared Memory Setup
+    game = mmap(NULL, sizeof(Game), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    if (game == MAP_FAILED) {
+        perror("mmap failed");
+        exit(1);
+    }
+
+    srand(time(NULL)); //seed random number generator
+
+    init_logger(); //initialize logger
+    log_event("Server Started"); //log game start event
+
     //Game Initialization
     for (int i = 0; i < PATH_LEN; i++) {
         game -> tileds [i] = rand() % 2; //randomly assign tiles
@@ -70,6 +86,27 @@ int main() {
     game -> turn = 0; //set first turn
 
     printf("Glass Bridge Game Start!\n");
+
+    //Fork Player Processes
+    for (int i = 0; i < PLAYERS; i++) {
+        pid_t pid = fork();
+        if (pid < 0) {
+            perror("Fork failed");
+            exit(1);
+        } else if (pid == 0) {
+            player_process(i); //child process runs player function
+        }
+    }
+
+    //Wait for Player Processes to Finish
+    for (int i = 0; i < PLAYERS; i++) {
+        wait(NULL); //wait for all child processes
+    }
+
+    close_logger(); //close logger
+    munmap(game, sizeof(Game)); //unmap shared memory
+    return 0;
+
     
 }
 
