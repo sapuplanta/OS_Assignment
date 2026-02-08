@@ -16,6 +16,7 @@ typedef struct {
     int alive [PLAYERS]; //alive status of players
     int turn; //current turn
 } Game; 
+
 Game *game; //pointer to shared game structure
 
 // Player Process Function

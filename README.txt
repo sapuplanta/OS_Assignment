@@ -27,8 +27,8 @@ The game runs locally on a single machine using POSIX system calls.
 - Players take turns choosing L or R.
 - Choosing the wrong tile eliminates theb player.
 - Eliminated players skip future turns.
-- The first bplayer to reach the end of the bridge wins.
-- The game ends immediately after a winner is found.
+- The first player to reach the end of the bridge wins.
+- The game continues to another round upon client confirmation.
 
 
 3. Modes Supported
